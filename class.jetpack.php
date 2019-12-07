@@ -7,6 +7,7 @@ use Automattic\Jetpack\Connection\REST_Connector as REST_Connector;
 use Automattic\Jetpack\Connection\XMLRPC_Connector as XMLRPC_Connector;
 use Automattic\Jetpack\Connection\Utils as Connection_Utils;
 use Automattic\Jetpack\Constants;
+use Automattic\Jetpack\JITM;
 use Automattic\Jetpack\Partner;
 use Automattic\Jetpack\Roles;
 use Automattic\Jetpack\Status;
@@ -757,6 +758,10 @@ class Jetpack {
 		}
 
 		add_filter( 'map_meta_cap', array( $this, 'jetpack_custom_caps' ), 1, 4 );
+
+		if ( is_admin() ) {
+			( new JITM() )->register();
+		}
 	}
 
 	/**
