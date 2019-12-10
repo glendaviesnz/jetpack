@@ -15,6 +15,11 @@ class Main {
 	 * Initialize the main sync actions.
 	 */
 	public static function init() {
+		// Exit out early if Sync isn't allowed.
+		if ( ! Actions::sync_allowed() ) {
+			return;
+		}
+
 		// Check for WooCommerce support.
 		add_action( 'plugins_loaded', array( 'Automattic\\Jetpack\\Sync\\Actions', 'initialize_woocommerce' ), 5 );
 
