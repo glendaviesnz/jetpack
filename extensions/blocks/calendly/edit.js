@@ -1,15 +1,18 @@
 /**
- * External dependencies
- */
-import { __ } from '@wordpress/i18n';
-
-/**
  * WordPress dependencies
  */
-import { BlockControls, BlockIcon, InspectorControls } from '@wordpress/block-editor';
-import { Button, ExternalLink, Notice, Placeholder, TextareaControl } from '@wordpress/components';
+import { BlockIcon, InspectorControls } from '@wordpress/block-editor';
+import {
+	Button,
+	ExternalLink,
+	Notice,
+	PanelBody,
+	Placeholder,
+	TextareaControl,
+	ToggleControl,
+} from '@wordpress/components';
 import { useState } from '@wordpress/element';
-import { _x } from '@wordpress/i18n';
+import { __, _x } from '@wordpress/i18n';
 
 /**
  * Internal dependencies
@@ -17,7 +20,10 @@ import { _x } from '@wordpress/i18n';
 import './editor.scss';
 import icon from './icon';
 
-export default function CalendlyEdit( { attributes: { url }, setAttributes } ) {
+export default function CalendlyEdit( {
+	attributes: { url, hideEventTypeDetails },
+	setAttributes,
+} ) {
 	const [ embedCode, setEmbedCode ] = useState();
 	const [ notice, setNotice ] = useState();
 
@@ -49,13 +55,13 @@ export default function CalendlyEdit( { attributes: { url }, setAttributes } ) {
 			return;
 		}
 
-		let url = '';
+		let newUrl = '';
 		if ( scriptTagAttributes[ 1 ].indexOf( 'http' ) === 0 ) {
-			url = scriptTagAttributes[ 1 ];
+			newUrl = scriptTagAttributes[ 1 ];
 		}
 
 		setAttributes( {
-			url,
+			url: newUrl,
 		} );
 	};
 
@@ -101,19 +107,38 @@ export default function CalendlyEdit( { attributes: { url }, setAttributes } ) {
 
 	const preview = (
 		<iframe
-			src="https://calendly.com/scruffian/usability-test?embed_domain=scruffian.ngrok.io&amp;embed_type=Inline"
+			src={
+				'https://calendly.com/scruffian/usability-test?embed_domain=scruffian.com&amp;embed_type=Inline' +
+				( hideEventTypeDetails ? '&amp;hide_event_type_details=1' : null )
+			}
 			width="100%"
 			height="100%"
 			frameborder="0"
 			data-origwidth="100%"
 			data-origheight="100%"
 			style={ { minWidth: '320px', height: '630px', width: '100%' } }
+			title="Calendly"
 		></iframe>
 	);
+
+	const inspectorControls = (
+		<InspectorControls>
+			<PanelBody title={ __( 'Settings', 'jetpack' ) }>
+				<ToggleControl
+					label={ __( 'Hide Event Type Details', 'jetpack' ) }
+					checked={ hideEventTypeDetails }
+					onChange={ () => setAttributes( { hideEventTypeDetails: ! hideEventTypeDetails } ) }
+				/>
+			</PanelBody>
+			<PanelBody title={ __( 'Embed code', 'jetpack' ) } initialOpen={ false }>
+				{ embedCodeForm }
+			</PanelBody>
+		</InspectorControls>
+	);
+
 	return (
 		<>
-			<InspectorControls />
-			<BlockControls />
+			{ inspectorControls }
 			{ url ? preview : blockPlaceholder }
 		</>
 	);

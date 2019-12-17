@@ -70,4 +70,14 @@ export const settings = {
 			// @TODO: Add default values for block attributes, for generating the block preview.
 		},
 	},
+
+	attributes: {
+		url: {
+			type: 'string',
+		},
+		hideEventTypeDetails: {
+			type: 'boolean',
+			default: false,
+		},
+	},
 };

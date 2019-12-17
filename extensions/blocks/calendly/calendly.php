@@ -22,14 +22,14 @@ jetpack_register_block(
  */
 function jetpack_calendly_block_load_assets( $attr, $content ) {
 	Jetpack_Gutenberg::load_assets_as_required( 'calendly' );
-	$type                 = jetpack_calendly_block_get_attribute( $attr, 'type' );
-	$url                  = jetpack_calendly_block_get_attribute( $attr, 'url' );
-	$button_text          = jetpack_calendly_block_get_attribute( $attr, 'buttonText' );
-	$color                = jetpack_calendly_block_get_attribute( $attr, 'color' );
-	$text_color           = jetpack_calendly_block_get_attribute( $attr, 'textColor' );
-	$branding             = jetpack_calendly_block_get_attribute( $attr, 'branding' );
-	$hideEventTypeDetails = jetpack_calendly_block_get_attribute( $attr, 'hideEventTypeDetails' );
-	if ( $hideEventTypeDetails ) {
+	$type                    = jetpack_calendly_block_get_attribute( $attr, 'type' );
+	$url                     = jetpack_calendly_block_get_attribute( $attr, 'url' );
+	$button_text             = jetpack_calendly_block_get_attribute( $attr, 'buttonText' );
+	$color                   = jetpack_calendly_block_get_attribute( $attr, 'color' );
+	$text_color              = jetpack_calendly_block_get_attribute( $attr, 'textColor' );
+	$branding                = jetpack_calendly_block_get_attribute( $attr, 'branding' );
+	$hide_event_type_details = jetpack_calendly_block_get_attribute( $attr, 'hideEventTypeDetails' );
+	if ( $hide_event_type_details ) {
 		$url .= '?hide_event_type_details=1';
 	}
 
@@ -68,13 +68,13 @@ function jetpack_calendly_block_get_attribute( $attributes, $attribute_name ) {
 	}
 
 	$default_attributes = array(
-		'type'             => 'inline',
-		'url'              => 'https://calendly.com/scruffian/usability-test',
-		'buttonText'       => 'Schedule time with me',
-		'color'            => '#00a2ff',
-		'textColor'        => '#ffffff',
-		'branding'         => true,
-		'hideEventDetails' => false,
+		'type'                 => 'inline',
+		'url'                  => 'https://calendly.com/scruffian/usability-test',
+		'buttonText'           => 'Schedule time with me',
+		'color'                => '#00a2ff',
+		'textColor'            => '#ffffff',
+		'branding'             => true,
+		'hideEventTypeDetails' => false,
 	);
 
 	return $default_attributes[ $attribute_name ];
