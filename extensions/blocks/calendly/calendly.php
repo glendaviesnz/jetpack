@@ -64,7 +64,7 @@ function jetpack_calendly_block_get_attribute( $attributes, $attribute_name ) {
 	}
 
 	$default_attributes = array(
-		'type'       => 'badge',
+		'type'       => 'inline',
 		'url'        => 'https://calendly.com/scruffian/usability-test',
 		'buttonText' => 'Schedule time with me',
 		'color'      => '#00a2ff',
