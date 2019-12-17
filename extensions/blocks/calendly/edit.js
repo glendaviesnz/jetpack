@@ -107,7 +107,7 @@ export default function CalendlyEdit( { attributes: { url }, setAttributes } ) {
 			frameborder="0"
 			data-origwidth="100%"
 			data-origheight="100%"
-			style={ { height: '630px', width: '100%' } }
+			style={ { minWidth: '320px', height: '630px', width: '100%' } }
 		></iframe>
 	);
 	return (
