@@ -76,6 +76,10 @@ export const settings = {
 			type: 'string',
 			default: 'ffffff',
 		},
+		buttonText: {
+			type: 'string',
+			default: 'Schedule time with me',
+		},
 		hideEventTypeDetails: {
 			type: 'boolean',
 			default: false,

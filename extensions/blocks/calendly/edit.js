@@ -73,7 +73,15 @@ const getNewAttributesFromUrl = url => {
 };
 
 export default function CalendlyEdit( {
-	attributes: { backgroundColor, hideEventTypeDetails, primaryColor, textColor, type, url },
+	attributes: {
+		backgroundColor,
+		buttonText,
+		hideEventTypeDetails,
+		primaryColor,
+		textColor,
+		type,
+		url,
+	},
 	className,
 	setAttributes,
 } ) {
@@ -160,7 +168,7 @@ export default function CalendlyEdit( {
 		return src;
 	};
 
-	const preview = (
+	const inlinePreview = (
 		<>
 			<div className={ `${ className }-overlay` }></div>
 			<iframe
@@ -175,6 +183,12 @@ export default function CalendlyEdit( {
 			></iframe>
 		</>
 	);
+
+	const linkPreview = <a href="#">{ buttonText }</a>;
+
+	const preview = () => {
+		return type === 'inline' ? inlinePreview : linkPreview;
+	};
 
 	const typeOptions = [
 		{ value: 'inline', label: __( 'Inline', 'jetpack' ) },
@@ -240,7 +254,7 @@ export default function CalendlyEdit( {
 	return (
 		<>
 			{ inspectorControls }
-			{ url ? preview : blockPlaceholder }
+			{ url ? preview() : blockPlaceholder }
 		</>
 	);
 }
