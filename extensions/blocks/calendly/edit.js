@@ -9,6 +9,7 @@ import {
 	Notice,
 	PanelBody,
 	Placeholder,
+	SelectControl,
 	TextareaControl,
 	ToggleControl,
 } from '@wordpress/components';
@@ -72,7 +73,7 @@ const getNewAttributesFromUrl = url => {
 };
 
 export default function CalendlyEdit( {
-	attributes: { backgroundColor, hideEventTypeDetails, primaryColor, textColor, url },
+	attributes: { backgroundColor, hideEventTypeDetails, primaryColor, textColor, type, url },
 	className,
 	setAttributes,
 } ) {
@@ -176,10 +177,21 @@ export default function CalendlyEdit( {
 		</>
 	);
 
+	const typeOptions = [
+		{ value: 'inline', label: __( 'Inline', 'jetpack' ) },
+		{ value: 'link', label: __( 'Link', 'jetpack' ) },
+	];
+
 	const inspectorControls = (
 		<InspectorControls>
 			{ url && (
 				<PanelBody title={ __( 'Settings', 'jetpack' ) }>
+					<SelectControl
+						label={ __( 'Type', 'jetpack' ) }
+						value={ type }
+						onChange={ newType => setAttributes( { type: newType } ) }
+						options={ typeOptions }
+					/>
 					<ToggleControl
 						label={ __( 'Hide Event Type Details', 'jetpack' ) }
 						checked={ hideEventTypeDetails }

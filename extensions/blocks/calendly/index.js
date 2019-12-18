@@ -88,6 +88,10 @@ export const settings = {
 			type: 'string',
 			default: '4D5055',
 		},
+		type: {
+			type: 'string',
+			default: 'inline',
+		},
 		url: {
 			type: 'string',
 		},

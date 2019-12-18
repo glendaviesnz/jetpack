@@ -22,7 +22,11 @@ jetpack_register_block(
  */
 function jetpack_calendly_block_load_assets( $attr, $content ) {
 	Jetpack_Gutenberg::load_assets_as_required( 'calendly' );
-	$url                     = jetpack_calendly_block_get_attribute( $attr, 'url' );
+	$url = jetpack_calendly_block_get_attribute( $attr, 'url' );
+	if ( empty( $url ) ) {
+		return;
+	}
+
 	$type                    = jetpack_calendly_block_get_attribute( $attr, 'type' );
 	$button_text             = jetpack_calendly_block_get_attribute( $attr, 'buttonText' );
 	$background_color        = jetpack_calendly_block_get_attribute( $attr, 'backgroundColor' );
@@ -69,7 +73,7 @@ function jetpack_calendly_block_get_attribute( $attributes, $attribute_name ) {
 	}
 
 	$default_attributes = array(
-		'type'                 => 'link',
+		'type'                 => 'inline',
 		'buttonText'           => 'Schedule time with me',
 		'backgroundColor'      => 'ffffff',
 		'textColor'            => '4D5055',
