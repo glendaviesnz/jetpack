@@ -4,6 +4,7 @@
 import { BlockIcon, InspectorControls } from '@wordpress/block-editor';
 import {
 	Button,
+	ColorPicker,
 	ExternalLink,
 	Notice,
 	PanelBody,
@@ -21,7 +22,8 @@ import './editor.scss';
 import icon from './icon';
 
 export default function CalendlyEdit( {
-	attributes: { url, hideEventTypeDetails },
+	attributes: { backgroundColor, hideEventTypeDetails, primaryColor, textColor, url },
+	className,
 	setAttributes,
 } ) {
 	const [ embedCode, setEmbedCode ] = useState();
@@ -105,31 +107,76 @@ export default function CalendlyEdit( {
 		</Placeholder>
 	);
 
+	const iframeSrc = () => {
+		let src =
+			'https://calendly.com/scruffian/usability-test?embed_domain=scruffian.com&amp;embed_type=Inline';
+		src += '&amp;hide_event_type_details=' + ( hideEventTypeDetails ? 1 : 0 );
+		src += '&amp;background_color=' + backgroundColor;
+		src += '&amp;primary_color=' + primaryColor;
+		src += '&amp;text_color=' + textColor;
+		return src;
+	};
+
 	const preview = (
-		<iframe
-			src={
-				'https://calendly.com/scruffian/usability-test?embed_domain=scruffian.com&amp;embed_type=Inline' +
-				( hideEventTypeDetails ? '&amp;hide_event_type_details=1' : null )
-			}
-			width="100%"
-			height="100%"
-			frameborder="0"
-			data-origwidth="100%"
-			data-origheight="100%"
-			style={ { minWidth: '320px', height: '630px', width: '100%' } }
-			title="Calendly"
-		></iframe>
+		<>
+			<div className={ `${ className }-overlay` }></div>
+			<iframe
+				src={ iframeSrc() }
+				width="100%"
+				height="100%"
+				frameborder="0"
+				data-origwidth="100%"
+				data-origheight="100%"
+				style={ { minWidth: '320px', height: '630px', width: '100%' } }
+				title="Calendly"
+			></iframe>
+		</>
 	);
 
 	const inspectorControls = (
 		<InspectorControls>
-			<PanelBody title={ __( 'Settings', 'jetpack' ) }>
-				<ToggleControl
-					label={ __( 'Hide Event Type Details', 'jetpack' ) }
-					checked={ hideEventTypeDetails }
-					onChange={ () => setAttributes( { hideEventTypeDetails: ! hideEventTypeDetails } ) }
-				/>
-			</PanelBody>
+			{ url && (
+				<PanelBody title={ __( 'Settings', 'jetpack' ) }>
+					<ToggleControl
+						label={ __( 'Hide Event Type Details', 'jetpack' ) }
+						checked={ hideEventTypeDetails }
+						onChange={ () => setAttributes( { hideEventTypeDetails: ! hideEventTypeDetails } ) }
+					/>
+				</PanelBody>
+			) }
+			{ url && (
+				<PanelBody title={ __( 'Background Color', 'jetpack' ) } initialOpen={ false }>
+					<ColorPicker
+						color={ backgroundColor }
+						onChangeComplete={ newBackgroundColor =>
+							setAttributes( { backgroundColor: newBackgroundColor.hex.substr( 1 ) } )
+						}
+						disableAlpha
+					/>
+				</PanelBody>
+			) }
+			{ url && (
+				<PanelBody title={ __( 'Primary Color', 'jetpack' ) } initialOpen={ false }>
+					<ColorPicker
+						color={ primaryColor }
+						onChangeComplete={ newPrimaryColor =>
+							setAttributes( { primaryColor: newPrimaryColor.hex.substr( 1 ) } )
+						}
+						disableAlpha
+					/>
+				</PanelBody>
+			) }
+			{ url && (
+				<PanelBody title={ __( 'Text Color', 'jetpack' ) } initialOpen={ false }>
+					<ColorPicker
+						color={ textColor }
+						onChangeComplete={ newTextColor =>
+							setAttributes( { textColor: newTextColor.hex.substr( 1 ) } )
+						}
+						disableAlpha
+					/>
+				</PanelBody>
+			) }
 			<PanelBody title={ __( 'Embed code', 'jetpack' ) } initialOpen={ false }>
 				{ embedCodeForm }
 			</PanelBody>

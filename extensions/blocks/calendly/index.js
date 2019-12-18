@@ -72,12 +72,24 @@ export const settings = {
 	},
 
 	attributes: {
-		url: {
+		backgroundColor: {
 			type: 'string',
+			default: 'ffffff',
 		},
 		hideEventTypeDetails: {
 			type: 'boolean',
 			default: false,
+		},
+		primaryColor: {
+			type: 'string',
+			default: '00A2FF',
+		},
+		textColor: {
+			type: 'string',
+			default: '4D5055',
+		},
+		url: {
+			type: 'string',
 		},
 	},
 };

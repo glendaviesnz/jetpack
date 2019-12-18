@@ -22,27 +22,28 @@ jetpack_register_block(
  */
 function jetpack_calendly_block_load_assets( $attr, $content ) {
 	Jetpack_Gutenberg::load_assets_as_required( 'calendly' );
-	$type                    = jetpack_calendly_block_get_attribute( $attr, 'type' );
 	$url                     = jetpack_calendly_block_get_attribute( $attr, 'url' );
+	$type                    = jetpack_calendly_block_get_attribute( $attr, 'type' );
 	$button_text             = jetpack_calendly_block_get_attribute( $attr, 'buttonText' );
-	$color                   = jetpack_calendly_block_get_attribute( $attr, 'color' );
+	$background_color        = jetpack_calendly_block_get_attribute( $attr, 'backgroundColor' );
 	$text_color              = jetpack_calendly_block_get_attribute( $attr, 'textColor' );
-	$branding                = jetpack_calendly_block_get_attribute( $attr, 'branding' );
+	$primary_color           = jetpack_calendly_block_get_attribute( $attr, 'primaryColor' );
 	$hide_event_type_details = jetpack_calendly_block_get_attribute( $attr, 'hideEventTypeDetails' );
-	if ( $hide_event_type_details ) {
-		$url .= '?hide_event_type_details=1';
-	}
+
+	$url = add_query_arg(
+		array(
+			'hide_event_type_details' => (int) $hide_event_type_details,
+			'background_color'        => $background_color,
+			'text_color'              => $text_color,
+			'primary_color'           => $primary_color,
+		),
+		$url
+	);
 
 	switch ( $type ) {
 		case 'inline':
 			$content  = '<div class="calendly-inline-widget" data-url="' . $url . '" style="min-width:320px;height:630px;"></div>';
 			$content .= '<script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js"></script>';
-			break;
-		case 'badge':
-			$settings_object = "{ url: '" . $url . "', text: '" . $button_text . "', color: '" . $color . "', textColor: '" . $text_color . "', branding: " . $branding . ' }';
-			$content         = '<link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet">';
-			$content        .= '<script src="https://assets.calendly.com/assets/external/widget.js" type="text/javascript"></script>';
-			$content        .= '<script type="text/javascript">Calendly.initBadgeWidget(' . $settings_object . ');</script>';
 			break;
 		case 'link':
 			$settings_object = "{url: '" . $url . "'}";
@@ -69,11 +70,10 @@ function jetpack_calendly_block_get_attribute( $attributes, $attribute_name ) {
 
 	$default_attributes = array(
 		'type'                 => 'inline',
-		'url'                  => 'https://calendly.com/scruffian/usability-test',
 		'buttonText'           => 'Schedule time with me',
-		'color'                => '#00a2ff',
-		'textColor'            => '#ffffff',
-		'branding'             => true,
+		'backgroundColor'      => 'ffffff',
+		'textColor'            => '4D5055',
+		'primaryColor'         => '00A2FF',
 		'hideEventTypeDetails' => false,
 	);
 
