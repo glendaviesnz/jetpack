@@ -1,7 +1,7 @@
 /**
  * WordPress dependencies
  */
-import { BlockIcon, InspectorControls, URLInput } from '@wordpress/block-editor';
+import { BlockIcon, InspectorControls } from '@wordpress/block-editor';
 import {
 	Button,
 	ColorPicker,
@@ -84,14 +84,23 @@ export default function CalendlyEdit( {
 		if ( embedCode.indexOf( 'http' ) === 0 ) {
 			src = embedCode;
 		} else {
-			const scriptTagAttributes = embedCode.match( / *data-url *= *["']?([^"']*)/i );
-			if ( ! scriptTagAttributes || ! scriptTagAttributes[ 1 ] ) {
-				setErrorNotice();
-				return;
-			}
+			const urlFromDataAttrirbute = embedCode.match( / *data-url *= *["']?([^"']*)/i );
+			if ( ! urlFromDataAttrirbute || ! urlFromDataAttrirbute[ 1 ] ) {
+				const urlFromJSCode = embedCode.match(
+					/ *Calendly.initPopupWidget\({url: *["']?([^"']*)/i
+				);
+				if ( ! urlFromJSCode || ! urlFromJSCode[ 1 ] ) {
+					setErrorNotice();
+					return;
+				}
 
-			if ( scriptTagAttributes[ 1 ].indexOf( 'http' ) === 0 ) {
-				src = scriptTagAttributes[ 1 ];
+				if ( urlFromJSCode[ 1 ].indexOf( 'http' ) === 0 ) {
+					src = urlFromJSCode[ 1 ];
+				}
+			} else {
+				if ( urlFromDataAttrirbute[ 1 ].indexOf( 'http' ) === 0 ) {
+					src = urlFromDataAttrirbute[ 1 ];
+				}
 			}
 		}
 
