@@ -186,9 +186,7 @@ export default function CalendlyEdit( {
 
 	const linkPreview = <a href="#">{ buttonText }</a>;
 
-	const preview = () => {
-		return type === 'inline' ? inlinePreview : linkPreview;
-	};
+	const preview = type === 'inline' ? inlinePreview : linkPreview;
 
 	const typeOptions = [
 		{ value: 'inline', label: __( 'Inline', 'jetpack' ) },
@@ -254,7 +252,7 @@ export default function CalendlyEdit( {
 	return (
 		<>
 			{ inspectorControls }
-			{ url ? preview() : blockPlaceholder }
+			{ url ? preview : blockPlaceholder }
 		</>
 	);
 }
