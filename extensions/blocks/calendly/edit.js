@@ -152,8 +152,7 @@ export default function CalendlyEdit( {
 	);
 
 	const iframeSrc = () => {
-		let src =
-			'https://calendly.com/scruffian/usability-test?embed_domain=scruffian.com&amp;embed_type=Inline';
+		let src = url + '?embed_domain=wordpress.com&amp;embed_type=Inline';
 		src += '&amp;hide_event_type_details=' + ( hideEventTypeDetails ? 1 : 0 );
 		src += '&amp;background_color=' + backgroundColor;
 		src += '&amp;primary_color=' + primaryColor;
