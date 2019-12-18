@@ -21,16 +21,37 @@ import { __, _x } from '@wordpress/i18n';
 import './editor.scss';
 import icon from './icon';
 
-const getNewAttributesFromSrc = src => {
-	const attributes = {};
-	const url = new URL( src );
-	attributes.url = url.origin + url.pathname;
+const getUrlFromEmbedCode = embedCode => {
+	if ( embedCode.indexOf( 'http' ) === 0 ) {
+		return embedCode;
+	}
 
-	if ( ! url.search ) {
+	let urlFromRegex = embedCode.match( / *data-url *= *["']?([^"']*)/i );
+	if ( urlFromRegex && urlFromRegex[ 1 ] && urlFromRegex[ 1 ].indexOf( 'http' ) === 0 ) {
+		return urlFromRegex[ 1 ];
+	}
+
+	urlFromRegex = embedCode.match( / *Calendly\.initPopupWidget\({* url: *["']?([^"']*)/i );
+	if ( urlFromRegex && urlFromRegex[ 1 ] && urlFromRegex[ 1 ].indexOf( 'http' ) === 0 ) {
+		return urlFromRegex[ 1 ];
+	}
+
+	urlFromRegex = embedCode.match( / *Calendly\.initBadgeWidget\({* url: *["']?([^"']*)/i );
+	if ( urlFromRegex && urlFromRegex[ 1 ] && urlFromRegex[ 1 ].indexOf( 'http' ) === 0 ) {
+		return urlFromRegex[ 1 ];
+	}
+};
+
+const getNewAttributesFromUrl = url => {
+	const attributes = {};
+	const urlObject = new URL( url );
+	attributes.url = urlObject.origin + urlObject.pathname;
+
+	if ( ! urlObject.search ) {
 		return attributes;
 	}
 
-	const searchParams = new URLSearchParams( url.search );
+	const searchParams = new URLSearchParams( urlObject.search );
 	if ( searchParams.get( 'hide_event_type_details' ) ) {
 		attributes.hideEventTypeDetails = searchParams.get( 'hide_event_type_details' );
 	}
@@ -80,31 +101,13 @@ export default function CalendlyEdit( {
 			return;
 		}
 
-		let src;
-		if ( embedCode.indexOf( 'http' ) === 0 ) {
-			src = embedCode;
-		} else {
-			const urlFromDataAttrirbute = embedCode.match( / *data-url *= *["']?([^"']*)/i );
-			if ( ! urlFromDataAttrirbute || ! urlFromDataAttrirbute[ 1 ] ) {
-				const urlFromJSCode = embedCode.match(
-					/ *Calendly.initPopupWidget\({url: *["']?([^"']*)/i
-				);
-				if ( ! urlFromJSCode || ! urlFromJSCode[ 1 ] ) {
-					setErrorNotice();
-					return;
-				}
-
-				if ( urlFromJSCode[ 1 ].indexOf( 'http' ) === 0 ) {
-					src = urlFromJSCode[ 1 ];
-				}
-			} else {
-				if ( urlFromDataAttrirbute[ 1 ].indexOf( 'http' ) === 0 ) {
-					src = urlFromDataAttrirbute[ 1 ];
-				}
-			}
+		const newUrl = getUrlFromEmbedCode( embedCode );
+		if ( ! newUrl ) {
+			setErrorNotice();
+			return;
 		}
 
-		setAttributes( getNewAttributesFromSrc( src ) );
+		setAttributes( getNewAttributesFromUrl( newUrl ) );
 	};
 
 	const embedCodeForm = (
