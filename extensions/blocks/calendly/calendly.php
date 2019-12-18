@@ -46,10 +46,10 @@ function jetpack_calendly_block_load_assets( $attr, $content ) {
 			$content .= '<script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js"></script>';
 			break;
 		case 'link':
-			$settings_object = "{url: '" . $url . "'}";
-			$content         = '<link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet">';
-			$content        .= '<script src="https://assets.calendly.com/assets/external/widget.js" type="text/javascript"></script>';
-			$content        .= '<a href="" onclick="Calendly.initPopupWidget(' . $settings_object . ');return false;">' . $button_text . '</a>';
+			$settings = "{url: '" . $url . "'}";
+			$content  = '<link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet">';
+			$content .= '<script src="https://assets.calendly.com/assets/external/widget.js" type="text/javascript"></script>';
+			$content .= '<div><a href="" onclick="Calendly.initPopupWidget(' . $settings . ');return false;">' . $button_text . '</a></div>';
 			break;
 	}
 	return $content;
@@ -69,7 +69,7 @@ function jetpack_calendly_block_get_attribute( $attributes, $attribute_name ) {
 	}
 
 	$default_attributes = array(
-		'type'                 => 'inline',
+		'type'                 => 'link',
 		'buttonText'           => 'Schedule time with me',
 		'backgroundColor'      => 'ffffff',
 		'textColor'            => '4D5055',

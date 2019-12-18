@@ -1,7 +1,7 @@
 /**
  * WordPress dependencies
  */
-import { BlockIcon, InspectorControls } from '@wordpress/block-editor';
+import { BlockIcon, InspectorControls, URLInput } from '@wordpress/block-editor';
 import {
 	Button,
 	ColorPicker,
@@ -20,6 +20,35 @@ import { __, _x } from '@wordpress/i18n';
  */
 import './editor.scss';
 import icon from './icon';
+
+const getNewAttributesFromSrc = src => {
+	const attributes = {};
+	const url = new URL( src );
+	attributes.url = url.origin + url.pathname;
+
+	if ( ! url.search ) {
+		return attributes;
+	}
+
+	const searchParams = new URLSearchParams( url.search );
+	if ( searchParams.get( 'hide_event_type_details' ) ) {
+		attributes.hideEventTypeDetails = searchParams.get( 'hide_event_type_details' );
+	}
+
+	if ( searchParams.get( 'background_color' ) ) {
+		attributes.backgroundColor = searchParams.get( 'background_color' );
+	}
+
+	if ( searchParams.get( 'primary_color' ) ) {
+		attributes.primary_color = searchParams.get( 'primary_color' );
+	}
+
+	if ( searchParams.get( 'text_color' ) ) {
+		attributes.text_color = searchParams.get( 'text_color' );
+	}
+
+	return attributes;
+};
 
 export default function CalendlyEdit( {
 	attributes: { backgroundColor, hideEventTypeDetails, primaryColor, textColor, url },
@@ -51,27 +80,29 @@ export default function CalendlyEdit( {
 			return;
 		}
 
-		const scriptTagAttributes = embedCode.match( / *data-url *= *["']?([^"']*)/i );
-		if ( ! scriptTagAttributes || ! scriptTagAttributes[ 1 ] ) {
-			setErrorNotice();
-			return;
+		let src;
+		if ( embedCode.indexOf( 'http' ) === 0 ) {
+			src = embedCode;
+		} else {
+			const scriptTagAttributes = embedCode.match( / *data-url *= *["']?([^"']*)/i );
+			if ( ! scriptTagAttributes || ! scriptTagAttributes[ 1 ] ) {
+				setErrorNotice();
+				return;
+			}
+
+			if ( scriptTagAttributes[ 1 ].indexOf( 'http' ) === 0 ) {
+				src = scriptTagAttributes[ 1 ];
+			}
 		}
 
-		let newUrl = '';
-		if ( scriptTagAttributes[ 1 ].indexOf( 'http' ) === 0 ) {
-			newUrl = scriptTagAttributes[ 1 ];
-		}
-
-		setAttributes( {
-			url: newUrl,
-		} );
+		setAttributes( getNewAttributesFromSrc( src ) );
 	};
 
 	const embedCodeForm = (
 		<form onSubmit={ parseEmbedCode }>
 			<TextareaControl
 				onChange={ value => setEmbedCode( value ) }
-				placeholder={ __( 'Paste your Calendly embed code here…' ) }
+				placeholder={ __( 'Paste your Calendly URL or embed code or here…' ) }
 			>
 				{ embedCode }
 			</TextareaControl>
