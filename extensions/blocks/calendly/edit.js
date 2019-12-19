@@ -1,4 +1,9 @@
 /**
+ * External Dependencies
+ */
+import { isEqual } from 'lodash';
+
+/**
  * WordPress dependencies
  */
 import { BlockIcon, InspectorControls } from '@wordpress/block-editor';
@@ -81,6 +86,12 @@ const getNewAttributesFromUrl = url => {
 };
 
 export default function CalendlyEdit( { attributes, className, setAttributes } ) {
+	const validatedAttributes = getValidatedAttributes( attributeDetails, attributes );
+
+	if ( ! isEqual( validatedAttributes, attributes ) ) {
+		setAttributes( validatedAttributes );
+	}
+
 	const {
 		backgroundColor,
 		buttonText,
@@ -89,8 +100,7 @@ export default function CalendlyEdit( { attributes, className, setAttributes } )
 		textColor,
 		type,
 		url,
-	} = getValidatedAttributes( attributeDetails, attributes );
-	console.log( backgroundColor );
+	} = validatedAttributes;
 	const [ embedCode, setEmbedCode ] = useState();
 	const [ notice, setNotice ] = useState();
 

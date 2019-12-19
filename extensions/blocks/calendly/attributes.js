@@ -1,4 +1,4 @@
-/*
+/**
  * External Dependencies
  */
 import { reduce } from 'lodash';
@@ -7,7 +7,7 @@ const hexRegex = /^[A-Fa-f0-9]{6}$/;
 
 const colourValidator = value => hexRegex.test( value );
 
-const urlValidator = url => url.startsWith( 'https://calendly.com/' );
+const urlValidator = url => ! url || url.startsWith( 'https://calendly.com/' );
 
 export default {
 	backgroundColor: {
@@ -54,7 +54,6 @@ export const getValidatedAttributes = ( attributeDetails, attributes ) =>
 			if ( 'boolean' === type ) {
 				ret[ attributeKey ] = !! attribute;
 			} else if ( validator ) {
-				console.log( attribute, attributeKey, validator, validator( attribute ) );
 				ret[ attributeKey ] = validator( attribute ) ? attribute : defaultVal;
 			} else if ( validValues ) {
 				ret[ attributeKey ] = validValues.includes( attribute ) ? attribute : defaultVal;

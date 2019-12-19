@@ -10,7 +10,7 @@ import { Fragment } from '@wordpress/element';
  */
 import renderMaterialIcon from '../../shared/render-material-icon';
 import edit from './edit';
-import attributeDetails, { getValidatedAttributes } from './attributes';
+import attributes from './attributes';
 
 /**
  * Style dependencies
@@ -45,10 +45,7 @@ export const settings = {
 	edit,
 
 	/* @TODO Write the block editor output */
-	save: ( { attributes } ) => {
-		attributes = getValidatedAttributes( attributeDetails, attributes );
-		return null;
-	},
+	save: () => null,
 
 	example: {
 		attributes: {
@@ -56,5 +53,5 @@ export const settings = {
 		},
 	},
 
-	attributes: attributeDetails,
+	attributes,
 };
