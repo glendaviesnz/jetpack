@@ -21,6 +21,7 @@ import { __, _x } from '@wordpress/i18n';
  */
 import './editor.scss';
 import icon from './icon';
+import attributeDetails, { getValidatedAttributes } from './attributes';
 
 const getUrlFromEmbedCode = embedCode => {
 	if ( embedCode.indexOf( 'http' ) === 0 ) {
@@ -53,27 +54,34 @@ const getNewAttributesFromUrl = url => {
 	}
 
 	const searchParams = new URLSearchParams( urlObject.search );
+	const [ backgroundColor, primaryColor, textColor ] = [
+		'background_color',
+		'primary_color',
+		'text_color',
+	].map( searchParams.get );
+	const hexRegex = /^[A-Za-z0-9]{6}$/;
+
 	if ( searchParams.get( 'hide_event_type_details' ) ) {
 		attributes.hideEventTypeDetails = searchParams.get( 'hide_event_type_details' );
 	}
 
-	if ( searchParams.get( 'background_color' ) ) {
-		attributes.backgroundColor = searchParams.get( 'background_color' );
+	if ( backgroundColor && hexRegex.match( backgroundColor ) ) {
+		attributes.backgroundColor = backgroundColor;
 	}
 
-	if ( searchParams.get( 'primary_color' ) ) {
-		attributes.primary_color = searchParams.get( 'primary_color' );
+	if ( primaryColor && hexRegex.match( primaryColor ) ) {
+		attributes.primary_color = primaryColor;
 	}
 
-	if ( searchParams.get( 'text_color' ) ) {
-		attributes.text_color = searchParams.get( 'text_color' );
+	if ( textColor && hexRegex.match( textColor ) ) {
+		attributes.text_color = textColor;
 	}
 
-	return attributes;
+	return getValidatedAttributes( attributeDetails, attributes );
 };
 
-export default function CalendlyEdit( {
-	attributes: {
+export default function CalendlyEdit( { attributes, className, setAttributes } ) {
+	const {
 		backgroundColor,
 		buttonText,
 		hideEventTypeDetails,
@@ -81,10 +89,8 @@ export default function CalendlyEdit( {
 		textColor,
 		type,
 		url,
-	},
-	className,
-	setAttributes,
-} ) {
+	} = getValidatedAttributes( attributeDetails, attributes );
+	console.log( backgroundColor );
 	const [ embedCode, setEmbedCode ] = useState();
 	const [ notice, setNotice ] = useState();
 
