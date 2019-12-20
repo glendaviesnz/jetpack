@@ -44,7 +44,7 @@ const getUrlAndStyleFromEmbedCode = embedCode => {
 		};
 	}
 
-	urlFromRegex = embedCode.match( / *Calendly\.initPopupWidget\({* url: *["']?([^"']*)/i );
+	urlFromRegex = embedCode.match( / *Calendly\.initPopupWidget\({ *url: *["']?([^"']*)/i );
 	if ( urlFromRegex && urlFromRegex[ 1 ] && urlFromRegex[ 1 ].indexOf( 'http' ) === 0 ) {
 		return {
 			style: 'link',
@@ -52,7 +52,7 @@ const getUrlAndStyleFromEmbedCode = embedCode => {
 		};
 	}
 
-	urlFromRegex = embedCode.match( / *Calendly\.initBadgeWidget\({* url: *["']?([^"']*)/i );
+	urlFromRegex = embedCode.match( / *Calendly\.initBadgeWidget\({ *url: *["']?([^"']*)/i );
 	if ( urlFromRegex && urlFromRegex[ 1 ] && urlFromRegex[ 1 ].indexOf( 'http' ) === 0 ) {
 		return {
 			style: 'link',
