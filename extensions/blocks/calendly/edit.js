@@ -59,11 +59,9 @@ const getNewAttributesFromUrl = url => {
 	}
 
 	const searchParams = new URLSearchParams( urlObject.search );
-	const [ backgroundColor, primaryColor, textColor ] = [
-		'background_color',
-		'primary_color',
-		'text_color',
-	].map( searchParams.get );
+	const backgroundColor = searchParams.get( 'background_color' );
+	const primaryColor = searchParams.get( 'primary_color' );
+	const textColor = searchParams.get( 'text_color' );
 	const hexRegex = /^[A-Za-z0-9]{6}$/;
 
 	if ( searchParams.get( 'hide_event_type_details' ) ) {
