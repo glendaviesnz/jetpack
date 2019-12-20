@@ -68,15 +68,15 @@ const getNewAttributesFromUrl = url => {
 		attributes.hideEventTypeDetails = searchParams.get( 'hide_event_type_details' );
 	}
 
-	if ( backgroundColor && hexRegex.match( backgroundColor ) ) {
+	if ( backgroundColor && backgroundColor.match( hexRegex ) ) {
 		attributes.backgroundColor = backgroundColor;
 	}
 
-	if ( primaryColor && hexRegex.match( primaryColor ) ) {
+	if ( primaryColor && primaryColor.match( hexRegex ) ) {
 		attributes.primary_color = primaryColor;
 	}
 
-	if ( textColor && hexRegex.match( textColor ) ) {
+	if ( textColor && textColor.match( hexRegex ) ) {
 		attributes.text_color = textColor;
 	}
 
