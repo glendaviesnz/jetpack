@@ -28,29 +28,41 @@ import './editor.scss';
 import icon from './icon';
 import attributeDetails, { getValidatedAttributes } from './attributes';
 
-const getUrlFromEmbedCode = embedCode => {
+const getUrlAndStyleFromEmbedCode = embedCode => {
 	if ( embedCode.indexOf( 'http' ) === 0 ) {
-		return embedCode;
+		return {
+			style: 'inline',
+			url: embedCode,
+		};
 	}
 
 	let urlFromRegex = embedCode.match( / *data-url *= *["']?([^"']*)/i );
 	if ( urlFromRegex && urlFromRegex[ 1 ] && urlFromRegex[ 1 ].indexOf( 'http' ) === 0 ) {
-		return urlFromRegex[ 1 ];
+		return {
+			style: 'inline',
+			url: urlFromRegex[ 1 ],
+		};
 	}
 
 	urlFromRegex = embedCode.match( / *Calendly\.initPopupWidget\({* url: *["']?([^"']*)/i );
 	if ( urlFromRegex && urlFromRegex[ 1 ] && urlFromRegex[ 1 ].indexOf( 'http' ) === 0 ) {
-		return urlFromRegex[ 1 ];
+		return {
+			style: 'link',
+			url: urlFromRegex[ 1 ],
+		};
 	}
 
 	urlFromRegex = embedCode.match( / *Calendly\.initBadgeWidget\({* url: *["']?([^"']*)/i );
 	if ( urlFromRegex && urlFromRegex[ 1 ] && urlFromRegex[ 1 ].indexOf( 'http' ) === 0 ) {
-		return urlFromRegex[ 1 ];
+		return {
+			style: 'link',
+			url: urlFromRegex[ 1 ],
+		};
 	}
 };
 
-const getNewAttributesFromUrl = url => {
-	const attributes = {};
+const getNewAttributesFromUrl = ( { url, style } ) => {
+	const attributes = { style };
 	const urlObject = new URL( url );
 	attributes.url = urlObject.origin + urlObject.pathname;
 
@@ -73,11 +85,11 @@ const getNewAttributesFromUrl = url => {
 	}
 
 	if ( primaryColor && primaryColor.match( hexRegex ) ) {
-		attributes.primary_color = primaryColor;
+		attributes.primaryColor = primaryColor;
 	}
 
 	if ( textColor && textColor.match( hexRegex ) ) {
-		attributes.text_color = textColor;
+		attributes.textColor = textColor;
 	}
 
 	return getValidatedAttributes( attributeDetails, attributes );
@@ -96,7 +108,7 @@ export default function CalendlyEdit( { attributes, className, setAttributes } )
 		hideEventTypeDetails,
 		primaryColor,
 		textColor,
-		type,
+		style,
 		url,
 	} = validatedAttributes;
 	const [ embedCode, setEmbedCode ] = useState();
@@ -124,13 +136,13 @@ export default function CalendlyEdit( { attributes, className, setAttributes } )
 			return;
 		}
 
-		const newUrl = getUrlFromEmbedCode( embedCode );
-		if ( ! newUrl ) {
+		const newUrlAndStyle = getUrlAndStyleFromEmbedCode( embedCode );
+		if ( ! newUrlAndStyle ) {
 			setErrorNotice();
 			return;
 		}
 
-		setAttributes( getNewAttributesFromUrl( newUrl ) );
+		setAttributes( getNewAttributesFromUrl( newUrlAndStyle ) );
 	};
 
 	const embedCodeForm = (
@@ -200,9 +212,9 @@ export default function CalendlyEdit( { attributes, className, setAttributes } )
 
 	const linkPreview = <a href="#">{ buttonText }</a>;
 
-	const preview = type === 'inline' ? inlinePreview : linkPreview;
+	const preview = style === 'inline' ? inlinePreview : linkPreview;
 
-	const typeOptions = [
+	const styleOptions = [
 		{ value: 'inline', label: __( 'Inline', 'jetpack' ) },
 		{ value: 'link', label: __( 'Link', 'jetpack' ) },
 	];
@@ -213,9 +225,9 @@ export default function CalendlyEdit( { attributes, className, setAttributes } )
 				<PanelBody title={ __( 'Settings', 'jetpack' ) }>
 					<SelectControl
 						label={ __( 'Type', 'jetpack' ) }
-						value={ type }
-						onChange={ newType => setAttributes( { type: newType } ) }
-						options={ typeOptions }
+						value={ style }
+						onChange={ newStyle => setAttributes( { style: newStyle } ) }
+						options={ styleOptions }
 					/>
 					<ToggleControl
 						label={ __( 'Hide Event Type Details', 'jetpack' ) }

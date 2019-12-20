@@ -33,7 +33,7 @@ export default {
 		default: '4D5055',
 		validator: colourValidator,
 	},
-	type: {
+	style: {
 		type: 'string',
 		default: 'inline',
 		validValues: [ 'inline', 'link' ],
