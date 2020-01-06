@@ -53,7 +53,7 @@ function jetpack_calendly_block_load_assets( $attr, $content ) {
 			$settings = "{url: '" . $url . "'}";
 			$content  = '<link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet">';
 			$content .= '<script src="https://assets.calendly.com/assets/external/widget.js" type="text/javascript"></script>';
-			$content .= '<div><a href="" onclick="Calendly.initPopupWidget(' . $settings . ');return false;">' . $submit_button_text . '</a></div>';
+			$content .= '<div><a class="button" href="" onclick="Calendly.initPopupWidget(' . $settings . ');return false;">' . $submit_button_text . '</a></div>';
 			break;
 	}
 	return $content;
