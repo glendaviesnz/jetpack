@@ -2,7 +2,7 @@
  * External dependencies
  */
 import { __ } from '@wordpress/i18n';
-import { ExternalLink, Path } from '@wordpress/components';
+import { ExternalLink } from '@wordpress/components';
 import { Fragment } from '@wordpress/element';
 
 /**
