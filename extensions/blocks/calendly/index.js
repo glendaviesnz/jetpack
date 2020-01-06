@@ -2,7 +2,6 @@
  * External dependencies
  */
 import { __ } from '@wordpress/i18n';
-import { ExternalLink } from '@wordpress/components';
 import { Fragment } from '@wordpress/element';
 
 /**
@@ -24,17 +23,15 @@ export const settings = {
 
 	description: (
 		<Fragment>
-			<p>{ __( 'Calendly', 'jetpack' ) }</p>
-			<ExternalLink href="#">{ __( 'Learn more about Calendly', 'jetpack' ) }</ExternalLink>
+			<p>{ __( 'Embed a calendar for customers to schedule appointments', 'jetpack' ) }</p>
 		</Fragment>
 	),
 
-	/* @TODO Add the icon. You can use one of these https://material.io/tools/icons/?style=outline */
 	icon,
 
 	category: 'jetpack',
 
-	keywords: [],
+	keywords: [ 'calendar', 'schedule', 'appointments' ],
 
 	supports: {
 		html: false,
@@ -42,14 +39,7 @@ export const settings = {
 
 	edit,
 
-	/* @TODO Write the block editor output */
 	save: () => null,
-
-	example: {
-		attributes: {
-			// @TODO: Add default values for block attributes, for generating the block preview.
-		},
-	},
 
 	attributes,
 };

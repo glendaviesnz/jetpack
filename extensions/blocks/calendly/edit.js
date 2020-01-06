@@ -117,9 +117,10 @@ export default function CalendlyEdit( { attributes, className, setAttributes } )
 	const setErrorNotice = () =>
 		setNotice(
 			<>
-				<strong>{ __( 'We ran into an issue', 'jetpack' ) }</strong>
-				<br />
-				{ __( 'Please ensure this embed matches the one from your Calendly account', 'jetpack' ) }
+				{ __(
+					"Your calendar couldn't be embedded. Please double check your URL or code.",
+					'jetpack'
+				) }
 			</>
 		);
 
@@ -149,7 +150,7 @@ export default function CalendlyEdit( { attributes, className, setAttributes } )
 		<form onSubmit={ parseEmbedCode }>
 			<TextareaControl
 				onChange={ value => setEmbedCode( value ) }
-				placeholder={ __( 'Paste your Calendly URL or embed code or here…' ) }
+				placeholder={ __( 'Enter your Calendly web address or embed code below.' ) }
 			>
 				{ embedCode }
 			</TextareaControl>
