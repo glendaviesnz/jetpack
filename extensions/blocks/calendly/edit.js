@@ -6,7 +6,7 @@ import { isEqual } from 'lodash';
 /**
  * WordPress dependencies
  */
-import { BlockIcon, InspectorControls } from '@wordpress/block-editor';
+import { BlockIcon, InspectorControls, RichText } from '@wordpress/block-editor';
 import {
 	Button,
 	ColorPicker,
@@ -95,7 +95,7 @@ const getNewAttributesFromUrl = ( { url, style } ) => {
 	return getValidatedAttributes( attributeDetails, attributes );
 };
 
-export default function CalendlyEdit( { attributes, className, setAttributes } ) {
+export default function CalendlyEdit( { attributes, className, isSelected, setAttributes } ) {
 	const validatedAttributes = getValidatedAttributes( attributeDetails, attributes );
 
 	if ( ! isEqual( validatedAttributes, attributes ) ) {
@@ -211,7 +211,17 @@ export default function CalendlyEdit( { attributes, className, setAttributes } )
 		</>
 	);
 
-	const linkPreview = <a href="#">{ buttonText }</a>;
+	const linkPreview = (
+		<a href="#" className={ isSelected ? `${ className }-link-editable` : null }>
+			<RichText
+				placeholder={ __( 'Add text…', 'jetpack' ) }
+				value={ buttonText }
+				onChange={ nextValue => setAttributes( { buttonText: nextValue } ) }
+				keepPlaceholderOnFocus
+				allowedFormats={ [] }
+			/>
+		</a>
+	);
 
 	const preview = style === 'inline' ? inlinePreview : linkPreview;
 

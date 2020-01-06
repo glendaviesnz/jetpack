@@ -9,4 +9,8 @@
 		height: 100%;
 		z-index: 10;
 	}
+
+	&-link-editable {
+		cursor: text;
+	}
 }
