@@ -6,7 +6,7 @@ import { isEqual } from 'lodash';
 /**
  * WordPress dependencies
  */
-import { BlockIcon, InspectorControls, RichText } from '@wordpress/block-editor';
+import { BlockIcon, InspectorControls } from '@wordpress/block-editor';
 import {
 	Button,
 	ColorPicker,
@@ -27,6 +27,7 @@ import { __, _x } from '@wordpress/i18n';
 import './editor.scss';
 import icon from './icon';
 import attributeDetails, { getValidatedAttributes } from './attributes';
+import SubmitButton from '../../shared/submit-button';
 
 const getUrlAndStyleFromEmbedCode = embedCode => {
 	if ( embedCode.indexOf( 'http' ) === 0 ) {
@@ -95,7 +96,7 @@ const getNewAttributesFromUrl = ( { url, style } ) => {
 	return getValidatedAttributes( attributeDetails, attributes );
 };
 
-export default function CalendlyEdit( { attributes, className, isSelected, setAttributes } ) {
+export default function CalendlyEdit( { attributes, className, setAttributes } ) {
 	const validatedAttributes = getValidatedAttributes( attributeDetails, attributes );
 
 	if ( ! isEqual( validatedAttributes, attributes ) ) {
@@ -104,7 +105,7 @@ export default function CalendlyEdit( { attributes, className, isSelected, setAt
 
 	const {
 		backgroundColor,
-		buttonText,
+		submitButtonText,
 		hideEventTypeDetails,
 		primaryColor,
 		textColor,
@@ -212,15 +213,11 @@ export default function CalendlyEdit( { attributes, className, isSelected, setAt
 	);
 
 	const linkPreview = (
-		<a href="#" className={ isSelected ? `${ className }-link-editable` : null }>
-			<RichText
-				placeholder={ __( 'Add text…', 'jetpack' ) }
-				value={ buttonText }
-				onChange={ nextValue => setAttributes( { buttonText: nextValue } ) }
-				keepPlaceholderOnFocus
-				allowedFormats={ [] }
-			/>
-		</a>
+		<SubmitButton
+			submitButtonText={ submitButtonText }
+			attributes={ attributes }
+			setAttributes={ setAttributes }
+		/>
 	);
 
 	const preview = style === 'inline' ? inlinePreview : linkPreview;

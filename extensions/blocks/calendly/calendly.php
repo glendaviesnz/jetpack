@@ -27,8 +27,8 @@ function jetpack_calendly_block_load_assets( $attr, $content ) {
 		return;
 	}
 
-	$type                    = jetpack_calendly_block_get_attribute( $attr, 'type' );
-	$button_text             = jetpack_calendly_block_get_attribute( $attr, 'buttonText' );
+	$style                   = jetpack_calendly_block_get_attribute( $attr, 'style' );
+	$submit_button_text      = jetpack_calendly_block_get_attribute( $attr, 'submitButtonText' );
 	$background_color        = jetpack_calendly_block_get_attribute( $attr, 'backgroundColor' );
 	$text_color              = jetpack_calendly_block_get_attribute( $attr, 'textColor' );
 	$primary_color           = jetpack_calendly_block_get_attribute( $attr, 'primaryColor' );
@@ -44,7 +44,7 @@ function jetpack_calendly_block_load_assets( $attr, $content ) {
 		$url
 	);
 
-	switch ( $type ) {
+	switch ( $style ) {
 		case 'inline':
 			$content  = '<div class="calendly-inline-widget" data-url="' . $url . '" style="min-width:320px;height:630px;"></div>';
 			$content .= '<script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js"></script>';
@@ -53,7 +53,7 @@ function jetpack_calendly_block_load_assets( $attr, $content ) {
 			$settings = "{url: '" . $url . "'}";
 			$content  = '<link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet">';
 			$content .= '<script src="https://assets.calendly.com/assets/external/widget.js" type="text/javascript"></script>';
-			$content .= '<div><a href="" onclick="Calendly.initPopupWidget(' . $settings . ');return false;">' . $button_text . '</a></div>';
+			$content .= '<div><a href="" onclick="Calendly.initPopupWidget(' . $settings . ');return false;">' . $submit_button_text . '</a></div>';
 			break;
 	}
 	return $content;
@@ -73,8 +73,8 @@ function jetpack_calendly_block_get_attribute( $attributes, $attribute_name ) {
 	}
 
 	$default_attributes = array(
-		'type'                 => 'inline',
-		'buttonText'           => 'Schedule time with me',
+		'style'                => 'inline',
+		'submitButtonText'     => 'Schedule time with me',
 		'backgroundColor'      => 'ffffff',
 		'textColor'            => '4D5055',
 		'primaryColor'         => '00A2FF',

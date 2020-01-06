@@ -15,7 +15,7 @@ export default {
 		default: 'ffffff',
 		validator: colourValidator,
 	},
-	buttonText: {
+	submitButtonText: {
 		type: 'string',
 		default: 'Schedule time with me',
 	},
