@@ -1,15 +1,15 @@
 /**
  * External Dependencies
  */
+import classnames from 'classnames';
 import { isEqual } from 'lodash';
 
 /**
  * WordPress dependencies
  */
-import { BlockIcon, InspectorControls } from '@wordpress/block-editor';
+import { BlockIcon, InspectorControls, PanelColorSettings } from '@wordpress/block-editor';
 import {
 	Button,
-	ColorPicker,
 	ExternalLink,
 	Notice,
 	PanelBody,
@@ -20,6 +20,7 @@ import {
 } from '@wordpress/components';
 import { useState } from '@wordpress/element';
 import { __, _x } from '@wordpress/i18n';
+import { ENTER, SPACE } from '@wordpress/keycodes';
 
 /**
  * Internal dependencies
@@ -220,7 +221,7 @@ export default function CalendlyEdit( { attributes, className, setAttributes } )
 		/>
 	);
 
-	const preview = style === 'inline' ? inlinePreview : linkPreview;
+	const blockPreview = previewStyle => ( previewStyle === 'inline' ? inlinePreview : linkPreview );
 
 	const styleOptions = [
 		{ value: 'inline', label: __( 'Inline', 'jetpack' ) },
@@ -230,55 +231,80 @@ export default function CalendlyEdit( { attributes, className, setAttributes } )
 	const inspectorControls = (
 		<InspectorControls>
 			{ url && (
-				<PanelBody title={ __( 'Settings', 'jetpack' ) }>
-					<SelectControl
-						label={ __( 'Type', 'jetpack' ) }
-						value={ style }
-						onChange={ newStyle => setAttributes( { style: newStyle } ) }
-						options={ styleOptions }
+				<>
+					<PanelBody title={ __( 'Settings', 'jetpack' ) }>
+						<SelectControl
+							label={ __( 'Type', 'jetpack' ) }
+							value={ style }
+							onChange={ newStyle => setAttributes( { style: newStyle } ) }
+							options={ styleOptions }
+						/>
+					</PanelBody>
+
+					<PanelBody title={ __( 'Styles', 'jetpack' ) }>
+						<div className="block-editor-block-styles">
+							{ styleOptions.map( styleOption => {
+								return (
+									<div
+										key={ styleOption.value }
+										className={ classnames( 'block-editor-block-styles__item is-calendly', {
+											'is-active': styleOption.value === style,
+										} ) }
+										onClick={ () => {
+											setAttributes( { style: styleOption.value } );
+										} }
+										onKeyDown={ event => {
+											if ( ENTER === event.keyCode || SPACE === event.keyCode ) {
+												event.preventDefault();
+												setAttributes( { style: styleOption.value } );
+											}
+										} }
+										role="button"
+										tabIndex="0"
+										aria-label={ styleOption.label }
+									>
+										<div className="block-editor-block-styles__item-preview editor-styles-wrapper is-calendly">
+											{ blockPreview( styleOption.value ) }
+										</div>
+										<div className="block-editor-block-styles__item-label">
+											{ styleOption.label }
+										</div>
+									</div>
+								);
+							} ) }
+						</div>
+					</PanelBody>
+
+					<PanelColorSettings
+						title={ __( 'Embed Color Settings', 'jetpack' ) }
+						colorSettings={ [
+							{
+								value: '#' + backgroundColor,
+								onChange: nextColor => setAttributes( { backgroundColor: nextColor.substr( 1 ) } ),
+								label: __( 'Background Color', 'jetpack' ),
+							},
+							{
+								value: '#' + primaryColor,
+								onChange: nextColor => setAttributes( { primaryColor: nextColor.substr( 1 ) } ),
+								label: __( 'Primary Color', 'jetpack' ),
+							},
+							{
+								value: '#' + textColor,
+								onChange: nextColor => setAttributes( { textColor: nextColor.substr( 1 ) } ),
+								label: __( 'Text Color', 'jetpack' ),
+							},
+						] }
 					/>
-					<ToggleControl
-						label={ __( 'Hide Event Type Details', 'jetpack' ) }
-						checked={ hideEventTypeDetails }
-						onChange={ () => setAttributes( { hideEventTypeDetails: ! hideEventTypeDetails } ) }
-					/>
-				</PanelBody>
+				</>
 			) }
-			{ url && (
-				<PanelBody title={ __( 'Background Color', 'jetpack' ) } initialOpen={ false }>
-					<ColorPicker
-						color={ backgroundColor }
-						onChangeComplete={ newBackgroundColor =>
-							setAttributes( { backgroundColor: newBackgroundColor.hex.substr( 1 ) } )
-						}
-						disableAlpha
-					/>
-				</PanelBody>
-			) }
-			{ url && (
-				<PanelBody title={ __( 'Primary Color', 'jetpack' ) } initialOpen={ false }>
-					<ColorPicker
-						color={ primaryColor }
-						onChangeComplete={ newPrimaryColor =>
-							setAttributes( { primaryColor: newPrimaryColor.hex.substr( 1 ) } )
-						}
-						disableAlpha
-					/>
-				</PanelBody>
-			) }
-			{ url && (
-				<PanelBody title={ __( 'Text Color', 'jetpack' ) } initialOpen={ false }>
-					<ColorPicker
-						color={ textColor }
-						onChangeComplete={ newTextColor =>
-							setAttributes( { textColor: newTextColor.hex.substr( 1 ) } )
-						}
-						disableAlpha
-					/>
-				</PanelBody>
-			) }
-			<PanelBody title={ __( 'Embed code', 'jetpack' ) } initialOpen={ false }>
+
+			<PanelBody title={ __( 'Calendar Settings', 'jetpack' ) } initialOpen={ false }>
 				{ embedCodeForm }
+				<ToggleControl
+					label={ __( 'Hide Event Type Details', 'jetpack' ) }
+					checked={ hideEventTypeDetails }
+					onChange={ () => setAttributes( { hideEventTypeDetails: ! hideEventTypeDetails } ) }
+				/>
 			</PanelBody>
 		</InspectorControls>
 	);
@@ -286,7 +312,7 @@ export default function CalendlyEdit( { attributes, className, setAttributes } )
 	return (
 		<>
 			{ inspectorControls }
-			{ url ? preview : blockPlaceholder }
+			{ url ? blockPreview( style ) : blockPlaceholder }
 		</>
 	);
 }

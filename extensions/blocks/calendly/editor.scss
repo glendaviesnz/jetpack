@@ -14,3 +14,24 @@
 		cursor: text;
 	}
 }
+
+
+.block-editor-block-styles__item.is-calendly {
+	padding-top: 6px;
+}
+
+.block-editor-block-styles__item-preview.is-calendly {
+	height: 100px;
+	margin-top: 0;
+	padding-top: 0;
+	position: relative;
+
+	> iframe {
+		transform-origin: 0 0;
+		transform: scale( 0.333 );
+		width: 300%;
+		height: 300;
+		position: absolute;
+		z-index: 1;
+	}
+}
