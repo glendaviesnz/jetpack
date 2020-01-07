@@ -7,16 +7,21 @@ import { isEqual } from 'lodash';
 /**
  * WordPress dependencies
  */
-import { BlockIcon, InspectorControls, PanelColorSettings } from '@wordpress/block-editor';
+import {
+	BlockControls,
+	BlockIcon,
+	InspectorControls,
+	PanelColorSettings,
+} from '@wordpress/block-editor';
 import {
 	Button,
 	ExternalLink,
 	Notice,
 	PanelBody,
 	Placeholder,
-	SelectControl,
 	TextareaControl,
 	ToggleControl,
+	Toolbar,
 } from '@wordpress/components';
 import { useState } from '@wordpress/element';
 import { __, _x } from '@wordpress/i18n';
@@ -213,7 +218,7 @@ export default function CalendlyEdit( { attributes, className, setAttributes } )
 		</>
 	);
 
-	const linkPreview = (
+	const submitButtonPreview = (
 		<SubmitButton
 			submitButtonText={ submitButtonText }
 			attributes={ attributes }
@@ -221,26 +226,52 @@ export default function CalendlyEdit( { attributes, className, setAttributes } )
 		/>
 	);
 
-	const blockPreview = previewStyle => ( previewStyle === 'inline' ? inlinePreview : linkPreview );
+	const linkPreview = (
+		<>
+			<a style={ { alignSelf: 'flex-start', border: 'none' } } class="wp-block-button__link">
+				{ submitButtonText }
+			</a>
+		</>
+	);
+
+	const blockPreview = ( previewStyle, disabled ) => {
+		if ( previewStyle === 'inline' ) {
+			return inlinePreview;
+		}
+
+		if ( disabled ) {
+			return linkPreview;
+		}
+
+		return submitButtonPreview;
+	};
 
 	const styleOptions = [
 		{ value: 'inline', label: __( 'Inline', 'jetpack' ) },
 		{ value: 'link', label: __( 'Link', 'jetpack' ) },
 	];
 
+	const blockControls = (
+		<BlockControls>
+			{ url && (
+				<Toolbar
+					isCollapsed={ true }
+					icon="admin-appearance"
+					label={ __( 'Style', 'jetpck' ) }
+					controls={ styleOptions.map( styleOption => ( {
+						title: styleOption.label,
+						isActive: styleOption.value === style,
+						onClick: () => setAttributes( { style: styleOption.value } ),
+					} ) ) }
+				/>
+			) }
+		</BlockControls>
+	);
+
 	const inspectorControls = (
 		<InspectorControls>
 			{ url && (
 				<>
-					<PanelBody title={ __( 'Settings', 'jetpack' ) }>
-						<SelectControl
-							label={ __( 'Type', 'jetpack' ) }
-							value={ style }
-							onChange={ newStyle => setAttributes( { style: newStyle } ) }
-							options={ styleOptions }
-						/>
-					</PanelBody>
-
 					<PanelBody title={ __( 'Styles', 'jetpack' ) }>
 						<div className="block-editor-block-styles">
 							{ styleOptions.map( styleOption => {
@@ -264,7 +295,7 @@ export default function CalendlyEdit( { attributes, className, setAttributes } )
 										aria-label={ styleOption.label }
 									>
 										<div className="block-editor-block-styles__item-preview editor-styles-wrapper is-calendly">
-											{ blockPreview( styleOption.value ) }
+											{ blockPreview( styleOption.value, true ) }
 										</div>
 										<div className="block-editor-block-styles__item-label">
 											{ styleOption.label }
@@ -312,6 +343,7 @@ export default function CalendlyEdit( { attributes, className, setAttributes } )
 	return (
 		<>
 			{ inspectorControls }
+			{ blockControls }
 			{ url ? blockPreview( style ) : blockPlaceholder }
 		</>
 	);
