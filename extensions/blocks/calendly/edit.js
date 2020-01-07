@@ -19,7 +19,6 @@ import {
 	Notice,
 	PanelBody,
 	Placeholder,
-	TextareaControl,
 	ToggleControl,
 	Toolbar,
 } from '@wordpress/components';
@@ -155,12 +154,14 @@ export default function CalendlyEdit( { attributes, className, setAttributes } )
 
 	const embedCodeForm = (
 		<form onSubmit={ parseEmbedCode }>
-			<TextareaControl
-				onChange={ value => setEmbedCode( value ) }
-				placeholder={ __( 'Enter your Calendly web address or embed code below.' ) }
-			>
-				{ embedCode }
-			</TextareaControl>
+			<input
+				type="text"
+				id="embedCode"
+				onChange={ event => setEmbedCode( event.target.value ) }
+				placeholder={ __( 'Calendly web address or embed code…' ) }
+				value={ embedCode }
+				className="components-placeholder__input"
+			/>
 			<div>
 				<Button isLarge type="submit">
 					{ _x( 'Embed', 'button label', 'jetpack' ) }
@@ -180,6 +181,7 @@ export default function CalendlyEdit( { attributes, className, setAttributes } )
 	const blockPlaceholder = (
 		<Placeholder
 			label={ __( 'Calendly', 'jetpack' ) }
+			instructions={ __( 'Enter your Calendly web address or embed code below.', 'jetpack' ) }
 			icon={ <BlockIcon icon={ icon } /> }
 			notices={
 				notice && (
