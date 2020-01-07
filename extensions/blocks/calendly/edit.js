@@ -332,7 +332,22 @@ export default function CalendlyEdit( { attributes, className, setAttributes } )
 			) }
 
 			<PanelBody title={ __( 'Calendar Settings', 'jetpack' ) } initialOpen={ false }>
-				{ embedCodeForm }
+				<form onSubmit={ parseEmbedCode } className={ `${ className }-embed-form-sidebar` }>
+					<input
+						type="text"
+						id="embedCode"
+						onChange={ event => setEmbedCode( event.target.value ) }
+						placeholder={ __( 'Calendly web address or embed code…' ) }
+						value={ embedCode }
+						className="components-placeholder__input"
+					/>
+					<div>
+						<Button isLarge type="submit">
+							{ _x( 'Embed', 'button label', 'jetpack' ) }
+						</Button>
+					</div>
+				</form>
+
 				<ToggleControl
 					label={ __( 'Hide Event Type Details', 'jetpack' ) }
 					checked={ hideEventTypeDetails }
