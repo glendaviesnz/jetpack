@@ -46,13 +46,20 @@ function jetpack_calendly_block_load_assets( $attr, $content ) {
 
 	switch ( $style ) {
 		case 'inline':
-			$content  = '<div class="calendly-inline-widget" data-url="' . $url . '" style="min-width:320px;height:630px;"></div>';
-			$content .= '<script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js"></script>';
+			$content = '<div class="calendly-inline-widget" data-url="' . $url . '" style="min-width:320px;height:630px;"></div>';
+			ob_start();
+			wp_register_script( 'jetpack-gutenberg-calendly-external-js', 'https://assets.calendly.com/assets/external/widget.js', null, JETPACK__VERSION, false );
+			wp_print_scripts( 'jetpack-gutenberg-calendly-external-js' );
+			$content .= ob_get_clean();
 			break;
 		case 'link':
+			ob_start();
+			wp_register_style( 'jetpack-gutenberg-calendly-external-css', 'https://assets.calendly.com/assets/external/widget.css', null, JETPACK__VERSION );
+			wp_print_styles( 'jetpack-gutenberg-calendly-external-css' );
+			wp_register_script( 'jetpack-gutenberg-calendly-external-js', 'https://assets.calendly.com/assets/external/widget.js', null, JETPACK__VERSION, false );
+			wp_print_scripts( 'jetpack-gutenberg-calendly-external-js' );
+			$content .= ob_get_clean();
 			$settings = "{url: '" . $url . "'}";
-			$content  = '<link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet">';
-			$content .= '<script src="https://assets.calendly.com/assets/external/widget.js" type="text/javascript"></script>';
 			$content .= '<div><a class="button" href="" onclick="Calendly.initPopupWidget(' . $settings . ');return false;">' . $submit_button_text . '</a></div>';
 			break;
 	}
